@@ -1,0 +1,23 @@
+Package: kdist
+Title: What the Package Does (one line, title case)
+Version: 0.0.0.9000
+Authors@R: person("Tim", "Lamont-Smith", email = "t.lamontsmith@gmail.com",
+                  role = c("aut", "cre"))
+Description: Density, distribution function, quantile function and random generation
+             for the K-distribution. Weibull plots.
+Depends:
+    R (>= 3.2.5)
+Imports:
+    stats,
+    graphics
+Exports:
+    dk,
+    pk,
+    qk,
+    rk,
+    wplot,
+    wlines
+License: GPL-3
+Encoding: UTF-8
+LazyData: true
+RoxygenNote: 5.0.1
