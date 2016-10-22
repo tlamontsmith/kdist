@@ -20,18 +20,18 @@
 #'         margins may need to be adjusted so that the right hand axis is
 #'         visible.
 #' 
-#' @seealso \code{wlines()} adds lines to a Weibull plot
+#' @seealso \code{weilines()} adds lines to a Weibull plot
 #' @examples
 #'
 #' graphics::par(mar = c(5, 5, 5, 5))
 #' r <- rexp(100000)
-#' wplot(r, xlim = c(1e-3, 10))
+#' weiplot(r, xlim = c(1e-3, 10))
 #' x <- 10^seq(-3, 2, length = 100)
-#' wlines(x, pexp(x))
-#' @name wplot
+#' weilines(x, pexp(x))
+#' @name weiplot
 #' @export
 # Create Weibull plot
-wplot <- function(data, n = 70, type = "p",  xlim = NULL, ylim = c(0.01, 10),
+weiplot <- function(data, n = 70, type = "p",  xlim = NULL, ylim = c(0.01, 10),
                   main = "Weibull Plot", sub = NULL,
                   ylab = "log(1/1-F(x))", ylab2 = "%", xlab = "x"){
 
@@ -42,14 +42,12 @@ wplot <- function(data, n = 70, type = "p",  xlim = NULL, ylim = c(0.01, 10),
     fn <- stats::ecdf(data)
 
     if (is.null(xlim)){
-       xlim = c(min(data), max(data))
+       xlim = c(min(data[data > 0]), max(data))
     }
 
-    x <- exp(seq(log(xlim[1]), log(xlim[2]), length = n+2))
+    x <- exp(seq(log(xlim[1]), log(xlim[2]), length = n))
 
-    # avoid having F(x) = 0 or F(x) = 1
-    F <- fn(x[2:n])
-    x <- x[2:n]
+    F <- fn(x)
   }
 
   graphics::plot(x, log(1 / (1 - F)), type = type, xlim = xlim,
@@ -57,11 +55,11 @@ wplot <- function(data, n = 70, type = "p",  xlim = NULL, ylim = c(0.01, 10),
        xlab = xlab, ylab = ylab)
 
   v = c(0.0001, 0.001, 0.01, 0.1, 0.3, 0.5, 0.7,
-         0.9, 0.98, 0.999)
-  tickv = log(1/(1-v))
+         0.9, 0.98, 0.999, 0.99999)
+  tickv = log(1 / (1 - v))
 
   ticklab = c('0.01', '0.1', '1', '10', '30', '50', '70',
-              '90', '98', '99.9')
+              '90', '98', '99.9', '99.999')
 
   graphics::axis(4, at = tickv, labels = ticklab)
 
@@ -90,15 +88,15 @@ wplot <- function(data, n = 70, type = "p",  xlim = NULL, ylim = c(0.01, 10),
 #' @examples
 #'
 #' dummy <- c(0,0)
-#' kdist::wplot(dummy, xlim = c(1e-3, 10), type = "n")
+#' weiplot(dummy, xlim = c(1e-3, 10), type = "n")
 #' x <- 10^seq(-3, 2, length = 100)
-#' wlines(x, pexp(x), col = "red")
-#' wlines(x, pweibull(x, 2), col = "blue")
-#' wlines(x, pweibull(x, 3), col = "green")
-#' @name wlines
+#' weilines(x, pexp(x), col = "red")
+#' weilines(x, pweibull(x, 2), col = "blue")
+#' weilines(x, pweibull(x, 3), col = "green")
+#' @name weilines
 #' @export
 # Put a line onto a Weibull plot
-wlines <- function(x, y, lty = NULL, lwd = NULL, col = "black",
+weilines <- function(x, y, lty = NULL, lwd = NULL, col = "black",
                    type = "l", pch = 0){
 
   graphics::lines(x, log(1 / (1 - y)), lty = lty, lwd = lwd, col = col,
