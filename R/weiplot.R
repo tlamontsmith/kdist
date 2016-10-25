@@ -15,25 +15,27 @@
 #' @param xlab the title of the x-axis
 #' @param ylab the title of the left y-axis
 #' @param ylab2 the title of the right y-axis
+#' @param percent logical; display right hand axis as percentages 
 #' @details A Weibull plot uses log paper and has log(1/(1-F(x)) versus x,
 #'         where the data values x have an empirical cdf of F(x). The plot
 #'         margins may need to be adjusted so that the right hand axis is
 #'         visible.
 #' 
-#' @seealso \code{wlines()} adds lines to a Weibull plot
+#' @seealso \code{weilines()} adds lines to a Weibull plot
 #' @examples
 #'
 #' graphics::par(mar = c(5, 5, 5, 5))
 #' r <- rexp(100000)
-#' wplot(r, xlim = c(1e-3, 10))
+#' weiplot(r, xlim = c(1e-3, 10))
 #' x <- 10^seq(-3, 2, length = 100)
-#' wlines(x, pexp(x))
-#' @name wplot
+#' weilines(x, pexp(x))
+#' @name weiplot
 #' @export
 # Create Weibull plot
-wplot <- function(data, n = 70, type = "p",  xlim = NULL, ylim = c(0.01, 10),
+weiplot <- function(data, n = 70, type = "p",  xlim = NULL, ylim = c(0.01, 10),
                   main = "Weibull Plot", sub = NULL,
-                  ylab = "log(1/1-F(x))", ylab2 = "%", xlab = "x"){
+                  ylab = "log(1/1-F(x))", ylab2 = "F(x)", xlab = "x",
+                  percent = "False"){
 
   if (type == "n"){
     x = c(1, 1)
@@ -42,26 +44,27 @@ wplot <- function(data, n = 70, type = "p",  xlim = NULL, ylim = c(0.01, 10),
     fn <- stats::ecdf(data)
 
     if (is.null(xlim)){
-       xlim = c(min(data), max(data))
+       xlim = c(min(data[data > 0]), max(data))
     }
 
-    x <- exp(seq(log(xlim[1]), log(xlim[2]), length = n+2))
+    x <- exp(seq(log(xlim[1]), log(xlim[2]), length = n))
 
-    # avoid having F(x) = 0 or F(x) = 1
-    F <- fn(x[2:n])
-    x <- x[2:n]
+    F <- fn(x)
   }
 
   graphics::plot(x, log(1 / (1 - F)), type = type, xlim = xlim,
        ylim = ylim, log = "xy", main = main, sub = sub,
        xlab = xlab, ylab = ylab)
 
-  v = c(0.0001, 0.001, 0.01, 0.1, 0.3, 0.5, 0.7,
-         0.9, 0.98, 0.999)
-  tickv = log(1/(1-v))
+  v = c(0.01, 0.1, 0.25, 0.5, 0.75, 0.99)
 
-  ticklab = c('0.01', '0.1', '1', '10', '30', '50', '70',
-              '90', '98', '99.9')
+  tickv = log(1 / (1 - v))
+ 
+  if (isTRUE(percent)){
+     ticklab = c('1', '10', '25', '50', '75', '99')
+  } else {
+     ticklab = c('0.01', '0.1', '0.25', '0.5', '0.75', '0.99')
+  }
 
   graphics::axis(4, at = tickv, labels = ticklab)
 
@@ -90,15 +93,15 @@ wplot <- function(data, n = 70, type = "p",  xlim = NULL, ylim = c(0.01, 10),
 #' @examples
 #'
 #' dummy <- c(0,0)
-#' kdist::wplot(dummy, xlim = c(1e-3, 10), type = "n")
+#' weiplot(dummy, xlim = c(1e-3, 10), type = "n")
 #' x <- 10^seq(-3, 2, length = 100)
-#' wlines(x, pexp(x), col = "red")
-#' wlines(x, pweibull(x, 2), col = "blue")
-#' wlines(x, pweibull(x, 3), col = "green")
-#' @name wlines
+#' weilines(x, pexp(x), col = "red")
+#' weilines(x, pweibull(x, 2), col = "blue")
+#' weilines(x, pweibull(x, 3), col = "green")
+#' @name weilines
 #' @export
 # Put a line onto a Weibull plot
-wlines <- function(x, y, lty = NULL, lwd = NULL, col = "black",
+weilines <- function(x, y, lty = NULL, lwd = NULL, col = "black",
                    type = "l", pch = 0){
 
   graphics::lines(x, log(1 / (1 - y)), lty = lty, lwd = lwd, col = col,

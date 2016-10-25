@@ -15,8 +15,8 @@ Exports:
     pk,
     qk,
     rk,
-    wplot,
-    wlines
+    weiplot,
+    weilines
 License: GPL-3
 Encoding: UTF-8
 LazyData: true
