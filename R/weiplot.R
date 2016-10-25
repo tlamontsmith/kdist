@@ -15,6 +15,7 @@
 #' @param xlab the title of the x-axis
 #' @param ylab the title of the left y-axis
 #' @param ylab2 the title of the right y-axis
+#' @param percent logical; display right hand axis as percentages 
 #' @details A Weibull plot uses log paper and has log(1/(1-F(x)) versus x,
 #'         where the data values x have an empirical cdf of F(x). The plot
 #'         margins may need to be adjusted so that the right hand axis is
@@ -33,7 +34,8 @@
 # Create Weibull plot
 weiplot <- function(data, n = 70, type = "p",  xlim = NULL, ylim = c(0.01, 10),
                   main = "Weibull Plot", sub = NULL,
-                  ylab = "log(1/1-F(x))", ylab2 = "%", xlab = "x"){
+                  ylab = "log(1/1-F(x))", ylab2 = "F(x)", xlab = "x",
+                  percent = "False"){
 
   if (type == "n"){
     x = c(1, 1)
@@ -54,12 +56,15 @@ weiplot <- function(data, n = 70, type = "p",  xlim = NULL, ylim = c(0.01, 10),
        ylim = ylim, log = "xy", main = main, sub = sub,
        xlab = xlab, ylab = ylab)
 
-  v = c(0.0001, 0.001, 0.01, 0.1, 0.3, 0.5, 0.7,
-         0.9, 0.98, 0.999, 0.99999)
-  tickv = log(1 / (1 - v))
+  v = c(0.01, 0.1, 0.25, 0.5, 0.75, 0.99)
 
-  ticklab = c('0.01', '0.1', '1', '10', '30', '50', '70',
-              '90', '98', '99.9', '99.999')
+  tickv = log(1 / (1 - v))
+ 
+  if (isTRUE(percent)){
+     ticklab = c('1', '10', '25', '50', '75', '99')
+  } else {
+     ticklab = c('0.01', '0.1', '0.25', '0.5', '0.75', '0.99')
+  }
 
   graphics::axis(4, at = tickv, labels = ticklab)
 
