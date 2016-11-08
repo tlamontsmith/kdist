@@ -1,10 +1,11 @@
 Package: kdist
-Title: What the Package Does (one line, title case)
+Title: K-distribution and Weibull paper
 Version: 0.0.0.9000
 Authors@R: person("Tim", "Lamont-Smith", email = "t.lamontsmith@gmail.com",
                   role = c("aut", "cre"))
 Description: Density, distribution function, quantile function and random generation
-             for the K-distribution. Weibull plots.
+             for the K-distribution. A plotting function that plots data on Weibull
+             paper and another function to draw additional lines.
 Depends:
     R (>= 3.2.5)
 Imports:
