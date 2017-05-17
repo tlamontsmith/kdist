@@ -68,7 +68,9 @@ weiplot <- function(data, n = 70, type = "p",  xlim = NULL, ylim = c(0.01, 10),
 
   graphics::axis(4, at = tickv, labels = ticklab)
 
-  graphics::mtext(ylab2, side = 4, line = 3)
+  cex = par()$cex
+
+  graphics::mtext(ylab2, side = 4, line = 2, cex = cex)
 }
 
 #' Add Lines onto a Weibull Plot
