@@ -15,20 +15,26 @@
 #'          \code{scale} parameter \eqn{b} has amplitude density given by
 #'          \eqn{f(x) = [4 x^\nu / \Gamma(\nu)]
 #'                      [(\nu / b)^(1+\nu/2)]
-#'                      K(2 x \sqrt{\nu/b},\nu-1)}.
+#'                      K(2 x \sqrt(\nu/b),\nu-1)}.
 #'          Where \eqn{K} is a modified Bessel function of the second kind.
+#'          For \eqn{\nu -> Inf}, the K-distrubution tends to a Rayleigh
+#'          distribution, and for \eqn{\nu = 1} it is the Exponential
+#'          distribution.
 #'          The function \code{base::besselK} is used in the calculation, and
 #'          care should be taken with large input arguements to this function,
 #'          e.g. \eqn{b} very small or \eqn{x, \nu} very large.
 #'          The cumulative distribution function for
 #'          the amplitude, \eqn{x} is given by
-#'          \eqn{F(x) = 1 - 2 x^\nu (\nu/b)^(\nu/2) K(2 x \sqrt{\nu/b}, \nu)}.
+#'          \eqn{F(x) = 1 - 2 x^\nu (\nu/b)^(\nu/2) K(2 x \sqrt(\nu/b), \nu)}.
 #'          The K-Distribution is a compound distribution, with Rayleigh
 #'          distributed amplitudes (exponential intensities) modulated by another
-#'          underlying process whose intensity is Gamma distributed. This method is
-#'          used to generate the random variates. The \eqn{m}-th moment of the
-#'          intensity values (\eqn{I = x^2}) is given by
-#'          \eqn{<I^m> = (b/\nu)^m \Gamma(1 + m) \Gamma(\nu + m) / \Gamma(\nu)}.
+#'          underlying process whose amplitude is chi-distributed and whose
+#'          intensity is Gamma distributed. An Exponential distributed number
+#'          multiplied by a Gamma distributed random number is used to
+#'          generate the random variates.
+#'          The \eqn{m}th moments are given by \eqn{\mu_m = (b/\nu)^(m/2) \Gamma(0.5m + 1)
+#'          \Gamma(0.5m + \nu) / \Gamma(\nu)}, so that the root mean square
+#'          value of x is the \code{scale} factor, \eqn{<x^2> = b^2}. 
 #' @return The function \code{dk} gives the density, \code{pk} gives the distribution
 #'         function, \code{qk} gives the quantile function, and \code{rk}
 #'         generates random variates.
@@ -95,7 +101,7 @@ pk <- function(q, shape = 1, scale = 1, intensity = FALSE,
      q <- sqrt(q)
   }
 
-  # if (2 * q * sqrt(shape / scale) > 1500) besselK may have underflow problems
+  #if (2 * q * sqrt(shape / scale) > 1500) "besselK may have underflow problems"
 
   # cdf of amplitude
   cdf <- 1 - 2 * q ^ shape * (shape / scale) ^ (shape / 2) *
